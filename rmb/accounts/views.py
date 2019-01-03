@@ -14,10 +14,18 @@ class IndexView(generic.ListView):
     template_name = 'accounts/login.html'
 
 
-def auth(request):
-    # リクエストのユーザ名、パスワードを取得する
-    username = request.POST['username']
-    password = request.POST['password']
+def authenticate(request):
+    try:
+        # リクエストのユーザ名、パスワードを取得する
+        username = request.POST['username']
+        password = request.POST['password']
+    except:
+        logging.debug("POST error")  # ここでエラー文言を返す
+        template = loader.get_template('accounts/login.html')
+        context = {
+            'error': 'POST error occurred!',
+        }
+        return HttpResponse(template.render(context, request))
 
     logging.debug("username : %s", username)
     logging.debug("password : %s", password)
@@ -37,7 +45,7 @@ def auth(request):
         logging.debug("if ng!!!! password is %s, user.password is %s", password, User.password)  # ここでエラー文言を返す
         template = loader.get_template('accounts/login.html')
         context = {
-            'error': 'error',
+            'error': 'Your usernamne and password did not match. Please try again.',
         }
         return HttpResponse(template.render(context, request))
 
