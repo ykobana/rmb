@@ -1,13 +1,13 @@
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
-
+from django.contrib.auth.models import AbstractUser
 
 # Create your models here.
 
 
-class User(models.Model):
-    name = models.CharField(max_length=100)
-    password = models.CharField(max_length=100)
+class User(AbstractUser):
+    name = models.CharField(max_length=100, default='nobody')
+#    password = models.CharField(max_length=100)
 
 
 class Character(models.Model):

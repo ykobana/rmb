@@ -29,7 +29,7 @@ def auth(request):
         logging.debug("error: Query not exit!!")
         user = None
 
-    if (user is not None) and (password == getattr(user, "password")):
+    if (user is not None) and (user.check_password(password)):
         logging.debug("if ok!!!!") # ここでログイン成功時の場所にリダイレクトする
         return redirect("index")  # view内で定義しているメソッドを呼び出す
     else:  # ← methodが'POST'ではない = 最初のページ表示時の処理

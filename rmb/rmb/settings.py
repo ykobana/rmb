@@ -144,3 +144,5 @@ else:
         filename = '/my_log_file.log',
         filemode = 'a'
     )
+
+AUTH_USER_MODEL = 'accounts.User'
