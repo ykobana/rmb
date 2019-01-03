@@ -9,12 +9,11 @@ import logging
 
 @method_decorator(login_required, name='dispatch')
 class IndexView(generic.ListView):
-    template_name = 'app/login.html'
+    template_name = 'accounts/login.html'
 
 
 def auth(request):
     # リクエストのユーザ名、パスワードを取得する
-    postdata = request.body
     username = request.POST['username']
     password = request.POST['password']
 

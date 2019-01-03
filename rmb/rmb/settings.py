@@ -32,7 +32,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'app.apps.AppConfig',
+    'accounts.apps.AppConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -123,10 +123,10 @@ STATIC_URL = '/static/'
 
 
 # 新規追加
-LOGIN_REDIRECT_URL = '/app/'
+LOGIN_REDIRECT_URL = '/accounts/'
 
 TEMPLATE_DIRS = (
-    os.path.join('app', 'templates'),
+    os.path.join('accounts', 'templates'),
 )
 
 # For debugging
