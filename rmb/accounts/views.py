@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.views import generic
 from .models import User
+from django.template import loader
 import logging
 
 
@@ -30,12 +31,14 @@ def auth(request):
 
     if (user is not None) and (password == getattr(user, "password")):
         logging.debug("if ok!!!!") # ここでログイン成功時の場所にリダイレクトする
+        return redirect("index")  # view内で定義しているメソッドを呼び出す
     else:  # ← methodが'POST'ではない = 最初のページ表示時の処理
         logging.debug("if ng!!!! password is %s, user.password is %s", password, User.password)  # ここでエラー文言を返す
-
-#    return render(request, "login.html", username)
-    return redirect("index")  # view内で定義しているメソッドを呼び出す
-
+        template = loader.get_template('accounts/login.html')
+        context = {
+            'error': 'error',
+        }
+        return HttpResponse(template.render(context, request))
 
 def index(request):
     return HttpResponse("Success!!")

@@ -126,7 +126,7 @@ STATIC_URL = '/static/'
 LOGIN_REDIRECT_URL = '/accounts/'
 
 TEMPLATE_DIRS = (
-    os.path.join('accounts', 'templates'),
+    os.path.join('accounts', 'templates/accounts'),
 )
 
 # For debugging
