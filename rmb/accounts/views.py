@@ -1,10 +1,8 @@
 from django.shortcuts import redirect, render
-from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.views import generic
 from .models import User
-from django.template import loader
 import logging
 from django.db import DatabaseError
 
@@ -21,11 +19,9 @@ def authenticate(request):
         password = request.POST['password']
     except:
         logging.debug("POST error")  # ここでエラー文言を返す
-        template = loader.get_template('accounts/login.html')
-        context = {
-            'error': 'POST error occurred!',
-        }
-        return HttpResponse(template.render(context, request))
+        return render(request, 'accounts/login.html', {
+            'error': 'POST error occurred!'
+        })
 
     logging.debug("username : %s", username)
     logging.debug("password : %s", password)
@@ -40,14 +36,14 @@ def authenticate(request):
 
     if (user is not None) and (user.check_password(password)):
         logging.debug("if ok!!!!")  # ここでログイン成功時の場所にリダイレクトする
-        return redirect("index")  # view内で定義しているメソッドを呼び出す
+        return render(request, 'accounts/main.html', {
+            'username': username
+        })
     else:  # ← methodが'POST'ではない = 最初のページ表示時の処理
         logging.debug("if ng!!!! password is %s, user.password is %s", password, User.password)  # ここでエラー文言を返す
-        template = loader.get_template('accounts/login.html')
-        context = {
-            'error': 'Your usernamne and password did not match. Please try again.',
-        }
-        return HttpResponse(template.render(context, request))
+        return render(request, 'accounts/login.html', {
+            'error': 'Your usernamne and password did not match. Please try again.'
+        })
 
 
 def register(request):
@@ -64,15 +60,9 @@ def register(request):
     try:
         new_user.save()
         logging.debug("database register success!!!!")
-        return redirect("index")
+        return redirect("main")
     except DatabaseError:
-        logging.debug("database error occured!!!!")
-        template = loader.get_template('accounts/register.html')
-        context = {
-            'error': 'database error occured',
-        }
-        return HttpResponse(template.render(context, request))
-
-
-def index(request):
-    return HttpResponse("Success!!")
+        logging.debug("database error occurred!!!!")
+        return render(request, 'accounts/register.html', {
+            'error': 'database error occurred'
+        })
