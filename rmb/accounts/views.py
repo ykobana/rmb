@@ -1,4 +1,4 @@
-from django.shortcuts import redirect, render
+from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.views import generic
@@ -36,13 +36,13 @@ def authenticate(request):
 
     if (user is not None) and (user.check_password(password)):
         logging.debug("if ok!!!!")  # ここでログイン成功時の場所にリダイレクトする
-        return render(request, 'accounts/main.html', {
+        return render(request, 'menu/menu.html', {
             'username': username
         })
     else:  # ← methodが'POST'ではない = 最初のページ表示時の処理
         logging.debug("if ng!!!! password is %s, user.password is %s", password, User.password)  # ここでエラー文言を返す
         return render(request, 'accounts/login.html', {
-            'error': 'Your usernamne and password did not match. Please try again.'
+            'error': 'Your username and password did not match. Please try again.'
         })
 
 

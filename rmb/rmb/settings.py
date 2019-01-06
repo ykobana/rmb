@@ -33,6 +33,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'accounts.apps.AppConfig',
+    'menu.apps.AppConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -127,6 +128,7 @@ LOGIN_REDIRECT_URL = '/accounts/'
 
 TEMPLATE_DIRS = (
     os.path.join('accounts', 'templates/accounts'),
+    os.path.join('menu', 'templates/menu')
 )
 
 # For debugging
