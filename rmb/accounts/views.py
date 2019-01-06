@@ -53,16 +53,17 @@ def register(request):
     email = request.POST['email']
 
     # 取得した情報で登録する
-    # TODO:失敗したらエラーを返す（すでに同じユーザまたはEmailアドレスが存在している）
     new_user = User(username=username, email=email)
     new_user.set_password(password)
 
     try:
         new_user.save()
         logging.debug("database register success!!!!")
-        return redirect("main")
+        return render(request, 'accounts/register.html', {
+            'result': 'registration succeeded!'
+        })
     except DatabaseError:
         logging.debug("database error occurred!!!!")
         return render(request, 'accounts/register.html', {
-            'error': 'database error occurred'
+            'result': 'database error occurred'
         })
