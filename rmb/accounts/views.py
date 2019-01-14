@@ -1,12 +1,14 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.views import generic
 from .models import User
 import logging
 from .forms import RegistrationForm
-from django.db import DatabaseError
 from django.contrib.auth import get_user_model
+
+
+User = get_user_model()
 
 
 @method_decorator(login_required, name='dispatch')
@@ -39,6 +41,8 @@ def authenticate(request):
 
     if (user is not None) and (user.check_password(password)):
         logging.debug("if ok!!!!")  # ここでログイン成功時の場所にリダイレクトする
+        request.session['username'] = username  # セッションIDを作成する
+        logging.debug("session: %s", request.session['username'])
         return render(request, 'menu/menu.html', {
             'username': username
         })
@@ -92,3 +96,8 @@ def register(request):
                 'result': 'database error occurred'
             })
 '''
+
+
+def logout(request):
+    request.session.flush()
+    return redirect('accounts:login')
