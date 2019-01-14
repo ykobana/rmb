@@ -13,6 +13,7 @@ class IndexView(generic.ListView):
 
 
 def authenticate(request):
+    logging.debug("authenticate() called.")
     try:
         # リクエストのユーザ名、パスワードを取得する
         username = request.POST['username']
@@ -47,6 +48,7 @@ def authenticate(request):
 
 
 def register(request):
+    logging.debug("register() called.")
     # リクエストのユーザ名、パスワード、Eメールアドレスを取得する
     username = request.POST['username']
     password = request.POST['password']
@@ -59,11 +61,11 @@ def register(request):
     try:
         new_user.save()
         logging.debug("database register success!!!!")
-        return render(request, 'accounts/register.html', {
+        return render(request, 'accounts/registration.html', {
             'result': 'registration succeeded!'
         })
     except DatabaseError:
         logging.debug("database error occurred!!!!")
-        return render(request, 'accounts/register.html', {
+        return render(request, 'accounts/registration.html', {
             'result': 'database error occurred'
         })

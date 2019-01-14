@@ -8,13 +8,12 @@
   </div>
 {% endif %}
 
-<!-- TODO:平文のパスワードが送られないようにする（register.htmlにも同じTODOあり） -->
 <div class="panel panel-primary">
   <div class="panel-heading">
     <h3 class="panel-title text-center">Log-in to rmb!</h3>
   </div>
   <div class="panel-body">
-    <form action="{% url 'authenticate' %}" method="post" role="form">
+    <form action="{% url 'accounts:authenticate' %}" method="post" role="form">
       {% csrf_token %}
       <div class="input-group" style="margin-bottom:10px">
         <span class="input-group-addon"><i class="fa fa-user fa-fw"></i></span>
@@ -28,7 +27,7 @@
       <button type="submit" style="margin-bottom:-20px"><i class="fa fa-sign-in">Login</i></button>
       <!-- <input name="next" type="hidden" value="{{ next }}"/> -->
     </form>
-    <button onclick="location.href='register/'" style="margin-bottom:-20px" ><i class="fa fa-sign-in">Registration</i></button>
+    <button onclick="location.href='{% url 'accounts:registration' %}'" style="margin-bottom:-20px" ><i class="fa fa-sign-in">Registration</i></button>
   </div>
 </div>
 {% endblock %}
