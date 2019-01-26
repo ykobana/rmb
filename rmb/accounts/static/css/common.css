@@ -1,0 +1,118 @@
+:root {
+  --button-color: black;
+}
+
+body {
+  background-color: #2f2f2f;
+  font-family: 'Lato', arial;
+  font-size: 15px;
+  padding: 0;
+  margin: 0;
+  color: black;
+  /* height: 100%; */
+  /* overflow-y: hidden; */
+}
+
+/* btn  */
+
+.rmb-btn {
+  color: black;
+  background: orange;
+  margin: 0;
+  border: 0;
+  cursor: pointer;
+  height: 36px;
+  border-radius: 30px;
+}
+
+.rmb-circle-btn {
+  display: block;
+  color: black;
+  background: orange;
+  justify-content: center;
+  align-items: center;
+  width: 200px;
+  height: 50px;
+  border-radius: 30px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  margin-left: 5px;
+  margin-right: 5px;
+  border-radius: 10px;
+}
+
+.rmb-btn:hover {
+  color: white;
+}
+
+.rmb-btn.all {
+  width: 100%;
+}
+
+.rmb-btn.half-lineup {
+  width: 50%;
+  float: left;
+  border: 1px solid #ddd;
+}
+
+.rmb-cancel {
+  background: #aaa;
+}
+
+.rmb-contents-btn {
+  padding: 20px;
+}
+
+/* modal */
+
+.rmb-modal {
+  background-color: #2f2f2f;
+  position: absolute;
+  width: 80%;
+}
+
+.rmb-modal .modal-main-contents {
+  overflow: hidden;
+  padding: 30px;
+}
+
+.rmb-modal section input {
+  width: 100%;
+  border-radius: 3px;
+  border: 1px solid #ddd;
+  margin-bottom: 26px;
+  padding: 10px;
+  font-size: 14px;
+}
+
+.rmb-modal section input:focus {
+  border-color: #28CA97;
+}
+
+.rmb-modal section footer {
+  overflow: hidden;
+}
+
+.rmb-modal .icon-close {
+  background: #FFF;
+  margin-bottom: 10px;
+  position: absolute;
+  right: -8px;
+  top: -8px;
+  font-size: 14px;
+  font-weight: bold;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  border: 0;
+  color: #a9a9a9;
+  cursor: pointer;
+}
+
+.rmb-modal .icon-close:hover, .rmb-modal .icon-close:focus {
+  color: black;
+}
+
+.rmb-modal.hasScroll .icon-close {
+  display: none;
+}

@@ -48,7 +48,7 @@ def authenticate(request):
         })
     else:  # ← methodが'POST'ではない = 最初のページ表示時の処理
         logging.debug("if ng!!!! password is %s, user.password is %s", password, User.password)  # ここでエラー文言を返す
-        return render(request, 'accounts/login.html', {
+        return render(request, 'accounts/_login.html', {
             'error': 'Your username and password did not match. Please try again.'
         })
 

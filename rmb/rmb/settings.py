@@ -122,6 +122,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 # 新規追加
 LOGIN_REDIRECT_URL = '/accounts/'
