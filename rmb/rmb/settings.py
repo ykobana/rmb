@@ -34,6 +34,12 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'accounts.apps.AppConfig',
     'menu.apps.AppConfig',
+    'chat.apps.ChatConfig',
+    'create.apps.CreateConfig',
+    'battle.apps.BattleConfig',
+    'log.apps.LogConfig',
+    'rank.apps.RankConfig',
+    'show.apps.ShowConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

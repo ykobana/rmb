@@ -15,12 +15,12 @@
     <!-- TODO:セッション情報管理を実装する。とりあえずはログイン画面に戻るようにしている。 -->
   </div>
   <div class="panel-body">
-    <button onclick="location.href='register/'" style="margin-bottom:-20px" ><i class="fa fa-sign-in">Create</i></button>
-    <button onclick="location.href='register/'" style="margin-bottom:-20px" ><i class="fa fa-sign-in">Battle</i></button>
-    <button onclick="location.href='register/'" style="margin-bottom:-20px" ><i class="fa fa-sign-in">Show</i></button>
-    <button onclick="location.href='register/'" style="margin-bottom:-20px" ><i class="fa fa-sign-in">Rank</i></button>
-    <button onclick="location.href='register/'" style="margin-bottom:-20px" ><i class="fa fa-sign-in">Chat</i></button>
-    <button onclick="location.href='register/'" style="margin-bottom:-20px" ><i class="fa fa-sign-in">Log</i></button>
+    <button onclick="location.href='{% url 'create:index' %}'" style="margin-bottom:-20px" ><i class="fa fa-sign-in">Create</i></button>
+    <button onclick="location.href='{% url 'battle:index' %}'" style="margin-bottom:-20px" ><i class="fa fa-sign-in">Battle</i></button>
+    <button onclick="location.href='{% url 'show:index' %}'" style="margin-bottom:-20px" ><i class="fa fa-sign-in">Show</i></button>
+    <button onclick="location.href='{% url 'rank:index' %}'" style="margin-bottom:-20px" ><i class="fa fa-sign-in">Rank</i></button>
+    <button onclick="location.href='{% url 'log:index' %}'" style="margin-bottom:-20px" ><i class="fa fa-sign-in">Log</i></button>
+    <button onclick="location.href='{% url 'chat:index' %}'" style="margin-bottom:-20px" ><i class="fa fa-sign-in">Chat</i></button>
   </div>
 </div>
 {% endblock %}
