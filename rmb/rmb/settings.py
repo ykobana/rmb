@@ -135,6 +135,7 @@ LOGIN_REDIRECT_URL = '/accounts/'
 
 TEMPLATE_DIRS = (
     os.path.join('accounts', 'templates/accounts'),
+    os.path.join('chat', 'templates/chat'),
     os.path.join('menu', 'templates/menu')
 )
 
