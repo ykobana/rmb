@@ -8,9 +8,10 @@
     <!-- bootstrap -->
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous"> -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+    <!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
             integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-            crossorigin="anonymous"></script>
+            crossorigin="anonymous"></script> -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script> -->
     <!-- izmodal  -->
@@ -51,19 +52,15 @@
         <div class="modal-main-contents">
             <div class="modal-contents">
                 <div class="heading">Chat</div>
+                <p>updateを押すと通信が始まります!</p>
+                <form id="form1">
+                    <input type="button" id="update_button" value="update">
+                </form>
                 <section class="chat-area">
-                    {% for chat in chats %}
-                    <div class="chat-data">
-                        <div class="chatuser">{{ chat.name }}</div>
-                        <div class="chat-balloon-right">
-                            <p>{{ chat.msg }}</p>
-                        </div>
-                    </div>
-                    {% endfor %}
                     <div class="chat-data">
                         <div class="chatuser">Tom/14:49</div>
                         <div class="chat-balloon-left">
-                            <p>aaaaaaaaaaaaaaaaaaaaa</p>
+                            <p>aaaadddd</p>
                         </div>
                     </div>
                     <div class="chat-data">
@@ -99,6 +96,16 @@
                             <p>aaaaaaaaaaaaaaaaaaaaa</p>
                         </div>
                     </div>
+                    {% for chat in chat_list %}
+                    <div class="chat-data">
+                        <div class="chatuser">{{ chat.name }}</div>
+                        <div class="chat-balloon-left">
+                            <p>{{ chat.message }}</p>
+                            <p>444444</p>
+                            <p>{{ forloop.counter }}</p>
+                        </div>
+                    </div>
+                    {% endfor %}
                 </section>
                 <div class="chat-send">
                     <input type="text" class="chat-message-area">
@@ -195,16 +202,64 @@
 </body>
 <script>
 $(function() {
-$("#modal-chat").iziModal();
-$("#modal-rank").iziModal();
-$(document).on('click', '.modal-chat-trigger', function(event) {
-event.preventDefault();
-$('#modal-chat').iziModal('open');
-});
-$(document).on('click', '.modal-rank-trigger', function(event) {
-event.preventDefault();
-$('#modal-rank').iziModal('open');
-});
+    $("#modal-chat").iziModal();
+    $("#modal-rank").iziModal();
+    $(document).on('click', '.modal-chat-trigger', function(event) {
+        event.preventDefault();
+        $('#modal-chat').iziModal('open');
+    });
+    $(document).on('click', '.modal-rank-trigger', function(event) {
+        event.preventDefault();
+        $('#modal-rank').iziModal('open');
+    });
+
+
+    $("#update_button").click(
+        function(){
+            console.log("データ取得中です");
+
+            // 1.$.ajaxメソッドで通信を行います。
+            //  20行目のdataは、フォームの内容をserialize()している
+            //  →serialize()の内容は、cs1=custom1&cs2=custom2
+            $.ajax({
+                url:"http://127.0.0.1:8000/menu/get_chat_list", // 通信先のURL
+                type:"GET",		// 使用するHTTPメソッド
+                dataType:"json", // 応答のデータの種類
+                                // (xml/html/script/json/jsonp/text)
+                timespan:1000 		// 通信のタイムアウトの設定(ミリ秒)
+
+                // 2. doneは、通信に成功した時に実行される
+                //  引数のdata1は、通信で取得したデータ
+                //  引数のtextStatusは、通信結果のステータス
+                //  引数のjqXHRは、XMLHttpRequestオブジェクト
+                }).done(function(data1,textStatus,jqXHR) {
+                        console.log(jqXHR.status); //例：200
+                        console.log(textStatus); //例：success
+
+                        // 3. キーを指定して値を表示
+                        //console.log(data1["form"]["cs1"]);
+
+                        // 4. JavaScriptオブジェクトをJSONに変換
+                        var data2 = JSON.stringify(data1);
+                        console.log(data2); //コンソールにJSONが表示される
+
+                        // 5.JSONをJavaScriptオブジェクトにし、
+                        // キーを指定して値(httpbin.org)を表示
+                        //var data3 = JSON.parse(data2);
+                        //$("#span5").text(data3["headers"]["Host"]);
+
+                // 6. failは、通信に失敗した時に実行される
+                }).fail(function(jqXHR, textStatus, errorThrown ) {
+                        console.log(jqXHR.status); //例：404
+                        console.log(textStatus); //例：error
+                        console.log(errorThrown); //例：NOT FOUND
+
+                // 7. alwaysは、成功/失敗に関わらず実行される
+                }).always(function(){
+                        console.log("complete!");
+
+            });
+        });
 });
 
 </script>

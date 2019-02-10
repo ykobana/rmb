@@ -6,6 +6,7 @@ from .models import User
 import logging
 from .forms import RegistrationForm
 from django.contrib.auth import get_user_model
+from menu.models import Chat
 
 User = get_user_model()
 
@@ -43,9 +44,15 @@ def authenticate(request):
         request.session['username'] = username  # セッションIDを作成する
         logging.debug("session: %s", request.session['username'])
 
-        return render(request, 'menu/menu.html', {
+        # チャットの履歴を取得する
+        chat_list = Chat.objects.order_by('-date')[:50]
+
+        context = {
             'username': username,
-        })
+            "chat_list": chat_list
+        }
+
+        return render(request, 'menu/menu.html', context)
 
     else:  # ← methodが'POST'ではない = 最初のページ表示時の処理
         logging.debug("if ng!!!! password is %s, user.password is %s", password, User.password)  # ここでエラー文言を返す
