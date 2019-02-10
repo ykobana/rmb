@@ -7,7 +7,6 @@ import logging
 from .forms import RegistrationForm
 from django.contrib.auth import get_user_model
 
-
 User = get_user_model()
 
 
@@ -43,12 +42,14 @@ def authenticate(request):
         logging.debug("if ok!!!!")  # ここでログイン成功時の場所にリダイレクトする
         request.session['username'] = username  # セッションIDを作成する
         logging.debug("session: %s", request.session['username'])
+
         return render(request, 'menu/menu.html', {
-            'username': username
+            'username': username,
         })
+
     else:  # ← methodが'POST'ではない = 最初のページ表示時の処理
         logging.debug("if ng!!!! password is %s, user.password is %s", password, User.password)  # ここでエラー文言を返す
-        return render(request, 'accounts/_login.html', {
+        return render(request, 'accounts/login.html', {
             'error': 'Your username and password did not match. Please try again.'
         })
 
@@ -72,8 +73,9 @@ def register(request):
             logging.debug("%s", error)
 
     return render(request, 'accounts/registration.html', {
-         'result': 'database error occurred'
+        'result': 'database error occurred'
     })
+
 
 '''
         # リクエストのユーザ名、パスワード、Eメールアドレスを取得する
