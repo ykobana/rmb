@@ -56,53 +56,12 @@
                 <form id="form1">
                     <input type="button" id="update_button" value="update">
                 </form>
-                <section class="chat-area">
-                    <div class="chat-data">
-                        <div class="chatuser">Tom/14:49</div>
-                        <div class="chat-balloon-left">
-                            <p>aaaadddd</p>
-                        </div>
-                    </div>
-                    <div class="chat-data">
-
-                    </div>
-                    <div class="chat-data">
-                        <div class="chatuser">Tom/14:49</div>
-                        <div class="chat-balloon-left">
-                            <p>aaaaaaaaaaaaaaaaaaaaa</p>
-                        </div>
-                    </div>
-                    <div class="chat-data">
-                        <div class="chatuser">Tom/14:49</div>
-                        <div class="chat-balloon-left">
-                            <p>aaaaaaaaaaaaaaaaaaaaa</p>
-                        </div>
-                    </div>
-                    <div class="chat-data">
-                        <div class="chatuser">Tom/14:49</div>
-                        <div class="chat-balloon-left">
-                            <p>aaaaaaaaaaaaaaaaaaaaa</p>
-                        </div>
-                    </div>
-                    <div class="chat-data">
-                        <div class="chatuser">Tom/14:49</div>
-                        <div class="chat-balloon-left">
-                            <p>aaaaaaaaaaaaaaaaaaaaa</p>
-                        </div>
-                    </div>
-                    <div class="chat-data">
-                        <div class="chatuser">Tom/14:49</div>
-                        <div class="chat-balloon-left">
-                            <p>aaaaaaaaaaaaaaaaaaaaa</p>
-                        </div>
-                    </div>
+                <section id="chat-section" class="chat-area">
                     {% for chat in chat_list %}
-                    <div class="chat-data">
+                    <div class="chat-data chat-idx-{{chat.pk}}">
                         <div class="chatuser">{{ chat.name }}</div>
                         <div class="chat-balloon-left">
                             <p>{{ chat.message }}</p>
-                            <p>444444</p>
-                            <p>{{ forloop.counter }}</p>
                         </div>
                     </div>
                     {% endfor %}
@@ -219,7 +178,7 @@ $(function() {
             console.log("データ取得中です");
 
             // 1.$.ajaxメソッドで通信を行います。
-            //  20行目のdataは、フォームの内容をserialize()している
+            //  dataは、フォームの内容をserialize()している
             //  →serialize()の内容は、cs1=custom1&cs2=custom2
             $.ajax({
                 url:"http://127.0.0.1:8000/menu/get_chat_list", // 通信先のURL
@@ -232,22 +191,69 @@ $(function() {
                 //  引数のdata1は、通信で取得したデータ
                 //  引数のtextStatusは、通信結果のステータス
                 //  引数のjqXHRは、XMLHttpRequestオブジェクト
-                }).done(function(data1,textStatus,jqXHR) {
-                        console.log(jqXHR.status); //例：200
-                        console.log(textStatus); //例：success
+                }).done(function(recv_data,text_status,jq_XHR) {
+                        console.log(jq_XHR.status); //例：200
+                        console.log(text_status); //例：success
 
-                        // 3. キーを指定して値を表示
-                        //console.log(data1["form"]["cs1"]);
+                        // JSONをJavaScriptオブジェクトにする
+                        var json_data = JSON.parse(recv_data);
+                        var db_chat_data = json_data;
+                        var db_latest_idx = json_data[0]["pk"]; // DB上の最新のインデックスを取得
+                        console.log("db_latest_idx:" + json_data[0]["pk"]);
 
-                        // 4. JavaScriptオブジェクトをJSONに変換
-                        var data2 = JSON.stringify(data1);
-                        console.log(data2); //コンソールにJSONが表示される
+                        // 現在表示中の最新のインデックスを取得
+                        var chat_data_elements = document.getElementsByClassName("chat-data");
+                        console.log("chat_data_elements: ");
+                        console.log(chat_data_elements);
+                        var displayed_latest_idx = chat_data_elements[0].className.split(" ")[1].match(/\d+/); // "chat-idx-*" の*を取得する
+                        console.log("displayed_latest_idx: " + displayed_latest_idx);
 
-                        // 5.JSONをJavaScriptオブジェクトにし、
-                        // キーを指定して値(httpbin.org)を表示
-                        //var data3 = JSON.parse(data2);
+                        // DB上の最新インデックス-50(件)より小さい表示中のインデックスを消す
+                        var min_chat_idx = db_latest_idx - 2;
+                        console.log("min_chat_idx: " + min_chat_idx);
+                        for(var i=0; i<chat_data_elements.length; i++) {
+                            //console.log("i: " + i);
+                            var displayed_chat_idx = chat_data_elements[i].className.split(" ")[1].match(/\d+/);
+                            //console.log("displayed_chat_idx: " + displayed_chat_idx);
+                            if(displayed_chat_idx <= min_chat_idx) {
+                                //console.log("delete idx: " + i);
+                                chat_data_elements[i].parentNode.removeChild(chat_data_elements[i]);
+                                i--; // delete後に、削除分の配列が詰められるのでインデックスもデクリメントする
+                            }
+                        }
+
+                        // DB上の最新インデックス~表示中の最新インデックスより後のチャットを表示する
+                        console.log("displayed_latest_idx:"+displayed_latest_idx);
+                        console.log("db_latest_idx:"+db_latest_idx);
+                        for(var i=displayed_latest_idx; i<=db_latest_idx; i++) {
+                        // TODO: ここをvar i=displayed_latest_idx+1 にすると動かないので今回は上記で無理やり勧めている。要修正。
+                            if(i == displayed_latest_idx) {
+                                continue;
+                            }
+                            console.log("append!!!: " + i);
+
+                            // 取得したチャットDB内から、該当idxを持つオブジェクトを取得
+                            var add_chat_data = $.grep(db_chat_data,
+                                                function(elem, index) {
+                                                  // ageプロパティの値でフィルター
+                                                  return (elem.pk == i);
+                                                }
+                                              );
+                            //console.log("add_chat_data: ");
+                            //console.log(add_chat_data);
+                            console.log("add_chat_data.pk: " + add_chat_data[0]["pk"]);
+                            console.log("add_chat_data.fields.name: " + add_chat_data[0]["fields"]["name"]);
+                            console.log("add_chat_data.fields.message " + add_chat_data[0]["fields"]["message"]);
+                            $('#chat-section').prepend('<div class="chat-data chat-idx-' + add_chat_data[0]["pk"] + '">' +
+                                                            '<div class="chatuser">' + add_chat_data[0]["fields"]["name"] + '</div>' +
+                                                            '<div class="chat-balloon-left">' +
+                                                                '<p>' + add_chat_data[0]["fields"]["message"] + '</p>' +
+                                                            '</div>' +
+                                                       '</div>');
+                        }
+
+
                         //$("#span5").text(data3["headers"]["Host"]);
-
                 // 6. failは、通信に失敗した時に実行される
                 }).fail(function(jqXHR, textStatus, errorThrown ) {
                         console.log(jqXHR.status); //例：404
@@ -260,6 +266,7 @@ $(function() {
 
             });
         });
+
 });
 
 </script>
