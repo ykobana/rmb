@@ -7,6 +7,8 @@ import logging
 from .forms import RegistrationForm
 from django.contrib.auth import get_user_model
 from menu.models import Chat
+from hashlib import sha256
+from django.contrib.auth.hashers import make_password
 
 User = get_user_model()
 
@@ -40,7 +42,7 @@ def authenticate(request):
         user = None
 
     if (user is not None) and (user.check_password(password)):
-        logging.debug("if ok!!!!")  # ここでログイン成功時の場所にリダイレクトする
+        logging.debug("if ok!!!! password is %s, user.password is %s", password, User.password)  # ここでログイン成功時の場所にリダイレクトする
         request.session['username'] = username  # セッションIDを作成する
         logging.debug("session: %s", request.session['username'])
 
@@ -67,7 +69,9 @@ def register(request):
     if request.method == 'POST':
         registration_form = RegistrationForm(request.POST)
         if registration_form.is_valid():
-            registration_form.save()
+            user_info = registration_form.save(commit=False)
+            user_info.password = make_password(registration_form.cleaned_data['password'])
+            user_info.save()
             logging.debug("database register success!!!!")
             return render(request, 'accounts/registration.html', {
                 'result': 'registration succeeded!'
@@ -80,7 +84,7 @@ def register(request):
             logging.debug("%s", error)
 
     return render(request, 'accounts/registration.html', {
-        'result': 'database error occurred'
+        'result': registration_form.errors
     })
 
 

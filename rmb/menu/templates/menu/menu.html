@@ -33,8 +33,8 @@
     </section>
 </header>
 <main class="main">
-
     <section class="menu contents">
+        <p>ようこそ、{{ username }}さん</p>
         <div class="heading">Menu</div>
         <div class="menu-info">
             <a id="create_" href="./create.html" class="rmb-btn">Create</a>
@@ -67,8 +67,10 @@
                     {% endfor %}
                 </section>
                 <div class="chat-send">
-                    <input type="text" class="chat-message-area">
-                    <button type="button" class="chat-message-button">send</button>
+                    {% csrf_token %}
+                    <input type="hidden" id="username" value="{{ username }}">
+                    <input type="text" id="send_message" class="chat-message-area">
+                    <input type="button" id="send_button" class="chat-message-button">
                 </div>
             </div>
         </div>
@@ -176,96 +178,155 @@ $(function() {
     $("#update_button").click(
         function(){
             console.log("データ取得中です");
-
-            // 1.$.ajaxメソッドで通信を行います。
-            //  dataは、フォームの内容をserialize()している
-            //  →serialize()の内容は、cs1=custom1&cs2=custom2
-            $.ajax({
-                url:"http://127.0.0.1:8000/menu/get_chat_list", // 通信先のURL
-                type:"GET",		// 使用するHTTPメソッド
-                dataType:"json", // 応答のデータの種類
-                                // (xml/html/script/json/jsonp/text)
-                timespan:1000 		// 通信のタイムアウトの設定(ミリ秒)
-
-                // 2. doneは、通信に成功した時に実行される
-                //  引数のdata1は、通信で取得したデータ
-                //  引数のtextStatusは、通信結果のステータス
-                //  引数のjqXHRは、XMLHttpRequestオブジェクト
-                }).done(function(recv_data,text_status,jq_XHR) {
-                        console.log(jq_XHR.status); //例：200
-                        console.log(text_status); //例：success
-
-                        // JSONをJavaScriptオブジェクトにする
-                        var json_data = JSON.parse(recv_data);
-                        var db_chat_data = json_data;
-                        var db_latest_idx = json_data[0]["pk"]; // DB上の最新のインデックスを取得
-                        console.log("db_latest_idx:" + json_data[0]["pk"]);
-
-                        // 現在表示中の最新のインデックスを取得
-                        var chat_data_elements = document.getElementsByClassName("chat-data");
-                        console.log("chat_data_elements: ");
-                        console.log(chat_data_elements);
-                        var displayed_latest_idx = chat_data_elements[0].className.split(" ")[1].match(/\d+/); // "chat-idx-*" の*を取得する
-                        console.log("displayed_latest_idx: " + displayed_latest_idx);
-
-                        // DB上の最新インデックス-50(件)より小さい表示中のインデックスを消す
-                        var min_chat_idx = db_latest_idx - 2;
-                        console.log("min_chat_idx: " + min_chat_idx);
-                        for(var i=0; i<chat_data_elements.length; i++) {
-                            //console.log("i: " + i);
-                            var displayed_chat_idx = chat_data_elements[i].className.split(" ")[1].match(/\d+/);
-                            //console.log("displayed_chat_idx: " + displayed_chat_idx);
-                            if(displayed_chat_idx <= min_chat_idx) {
-                                //console.log("delete idx: " + i);
-                                chat_data_elements[i].parentNode.removeChild(chat_data_elements[i]);
-                                i--; // delete後に、削除分の配列が詰められるのでインデックスもデクリメントする
-                            }
-                        }
-
-                        // DB上の最新インデックス~表示中の最新インデックスより後のチャットを表示する
-                        console.log("displayed_latest_idx:"+displayed_latest_idx);
-                        console.log("db_latest_idx:"+db_latest_idx);
-                        for(var i=displayed_latest_idx; i<=db_latest_idx; i++) {
-                        // TODO: ここをvar i=displayed_latest_idx+1 にすると動かないので今回は上記で無理やり勧めている。要修正。
-                            if(i == displayed_latest_idx) {
-                                continue;
-                            }
-                            console.log("append!!!: " + i);
-
-                            // 取得したチャットDB内から、該当idxを持つオブジェクトを取得
-                            var add_chat_data = $.grep(db_chat_data,
-                                                function(elem, index) {
-                                                  // ageプロパティの値でフィルター
-                                                  return (elem.pk == i);
-                                                }
-                                              );
-                            //console.log("add_chat_data: ");
-                            //console.log(add_chat_data);
-                            console.log("add_chat_data.pk: " + add_chat_data[0]["pk"]);
-                            console.log("add_chat_data.fields.name: " + add_chat_data[0]["fields"]["name"]);
-                            console.log("add_chat_data.fields.message " + add_chat_data[0]["fields"]["message"]);
-                            $('#chat-section').prepend('<div class="chat-data chat-idx-' + add_chat_data[0]["pk"] + '">' +
-                                                            '<div class="chatuser">' + add_chat_data[0]["fields"]["name"] + '</div>' +
-                                                            '<div class="chat-balloon-left">' +
-                                                                '<p>' + add_chat_data[0]["fields"]["message"] + '</p>' +
-                                                            '</div>' +
-                                                       '</div>');
-                        }
-
-
-                        //$("#span5").text(data3["headers"]["Host"]);
-                // 6. failは、通信に失敗した時に実行される
-                }).fail(function(jqXHR, textStatus, errorThrown ) {
-                        console.log(jqXHR.status); //例：404
-                        console.log(textStatus); //例：error
-                        console.log(errorThrown); //例：NOT FOUND
-
-                // 7. alwaysは、成功/失敗に関わらず実行される
-                }).always(function(){
-                        console.log("complete!");
-
-            });
+            updateDisplayedChat();
         });
+
+
+    $("#send_button").click(
+        function(){
+            console.log("send button clicked!");
+
+            var username = document.getElementById("username").value;
+            var message = document.getElementById("send_message").value;
+            console.log("username: " + username);
+            console.log("message: " + message);
+            var json_data = {
+                "username": username,
+                "message" : message
+            };
+            $.post( 'http://127.0.0.1:8000/menu/post_chat_message',
+                    json_data )
+                .done(function( data ) {
+                    console.log( data.form );
+                    updateDisplayedChat();
+                })
+                .always(function() {
+                    console.log("send complete!");
+                });
+        });
+
+    function updateDisplayedChat() {
+        // 1.$.ajaxメソッドで通信を行います。
+        //  dataは、フォームの内容をserialize()している
+        //  →serialize()の内容は、cs1=custom1&cs2=custom2
+        $.ajax({
+            url:"http://127.0.0.1:8000/menu/get_chat_list", // 通信先のURL
+            type:"GET",		// 使用するHTTPメソッド
+            dataType:"json", // 応答のデータの種類
+                            // (xml/html/script/json/jsonp/text)
+            timespan:1000 		// 通信のタイムアウトの設定(ミリ秒)
+
+            // 2. doneは、通信に成功した時に実行される
+            //  引数のdata1は、通信で取得したデータ
+            //  引数のtextStatusは、通信結果のステータス
+            //  引数のjqXHRは、XMLHttpRequestオブジェクト
+            }).done(function(recv_data,text_status,jq_XHR) {
+                    console.log(jq_XHR.status); //例：200
+                    console.log(text_status); //例：success
+
+                    // JSONをJavaScriptオブジェクトにする
+                    var json_data = JSON.parse(recv_data);
+                    var db_chat_data = json_data;
+                    var db_latest_idx = json_data[0]["pk"]; // DB上の最新のインデックスを取得
+                    console.log("db_latest_idx:" + json_data[0]["pk"]);
+
+                    // 現在表示中の最新のインデックスを取得
+                    var chat_data_elements = document.getElementsByClassName("chat-data");
+                    console.log("chat_data_elements: ");
+                    console.log(chat_data_elements);
+                    var displayed_latest_idx = chat_data_elements[0].className.split(" ")[1].match(/\d+/); // "chat-idx-*" の*を取得する
+                    console.log("displayed_latest_idx: " + displayed_latest_idx);
+
+                    // DB上の最新インデックス-50(件)より小さい表示中のインデックスを消す
+                    MAX_CHAT_NUM = 5;
+                    var min_chat_idx = db_latest_idx - MAX_CHAT_NUM;
+                    console.log("min_chat_idx: " + min_chat_idx);
+                    for(var i=0; i<chat_data_elements.length; i++) {
+                        //console.log("i: " + i);
+                        var displayed_chat_idx = chat_data_elements[i].className.split(" ")[1].match(/\d+/);
+                        //console.log("displayed_chat_idx: " + displayed_chat_idx);
+                        if(displayed_chat_idx <= min_chat_idx) {
+                            //console.log("delete idx: " + i);
+                            chat_data_elements[i].parentNode.removeChild(chat_data_elements[i]);
+                            i--; // delete後に、削除分の配列が詰められるのでインデックスもデクリメントする
+                        }
+                    }
+
+                    // DB上の最新インデックス~表示中の最新インデックスより後のチャットを表示する
+                    console.log("displayed_latest_idx:"+displayed_latest_idx);
+                    console.log("db_latest_idx:"+db_latest_idx);
+                    for(var i=displayed_latest_idx; i<=db_latest_idx; i++) {
+                    // TODO: ここをvar i=displayed_latest_idx+1 にすると動かないので今回は上記で無理やり勧めている。要修正。
+                        if(i == displayed_latest_idx) {
+                            continue;
+                        }
+                        console.log("append!!!: " + i);
+
+                        // 取得したチャットDB内から、該当idxを持つオブジェクトを取得
+                        var add_chat_data = $.grep(db_chat_data,
+                                            function(elem, index) {
+                                              // ageプロパティの値でフィルター
+                                              return (elem.pk == i);
+                                            }
+                                          );
+                        //console.log("add_chat_data: ");
+                        //console.log(add_chat_data);
+                        console.log("add_chat_data.pk: " + add_chat_data[0]["pk"]);
+                        console.log("add_chat_data.fields.name: " + add_chat_data[0]["fields"]["name"]);
+                        console.log("add_chat_data.fields.message " + add_chat_data[0]["fields"]["message"]);
+                        $('#chat-section').prepend('<div class="chat-data chat-idx-' + add_chat_data[0]["pk"] + '">' +
+                                                        '<div class="chatuser">' + add_chat_data[0]["fields"]["name"] + '</div>' +
+                                                        '<div class="chat-balloon-left">' +
+                                                            '<p>' + add_chat_data[0]["fields"]["message"] + '</p>' +
+                                                        '</div>' +
+                                                   '</div>');
+                    }
+
+            // 6. failは、通信に失敗した時に実行される
+            }).fail(function(jqXHR, textStatus, errorThrown ) {
+                    console.log(jqXHR.status); //例：404
+                    console.log(textStatus); //例：error
+                    console.log(errorThrown); //例：NOT FOUND
+
+            // 7. alwaysは、成功/失敗に関わらず実行される
+            }).always(function(){
+                    console.log("complete!");
+
+        });
+    }
+
+    // jsでcsrf対策をするためのコード。下記参照。
+    // https://qiita.com/yat1ma30/items/c7545896295761a34c77
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = jQuery.trim(cookies[i]);
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    var csrftoken = getCookie('csrftoken');
+
+    function csrfSafeMethod(method) {
+        // these HTTP methods do not require CSRF protection
+        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    }
+
+    $.ajaxSetup({
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        }
+    });
 
 });
 
