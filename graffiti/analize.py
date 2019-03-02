@@ -78,6 +78,6 @@ max_length = np.abs(l - mean_length)
 norm_length_array = dev_length_array / max_length
 # 正規化後の平均を求める
 mean_norm_length = np.mean(norm_length_array)
-defence_point = int(mean_norm_length * 255)
+defence_point = 255 - int(mean_norm_length * 255)
 
 print('defence_point:', defence_point)
