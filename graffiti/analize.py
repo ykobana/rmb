@@ -4,17 +4,18 @@ import cv2
 import copy
 import sys
 
+
 # 2点間の距離を算出する関数
-
-
 def calc_dist(x1, y1, x2, y2):
     a = np.array([x1, y1])
     b = np.array([x2, y2])
     length = np.linalg.norm(a - b)
     return length
 
+
 # 元画像の読み込み
-img = cv2.imread('img/images.jpg')
+args = sys.argv
+img = cv2.imread(args[1])
 
 
 # 攻撃力の算出(直線が多い)
@@ -35,9 +36,9 @@ if lines is not None:
         x1, y1, x2, y2 = line[0]
         cv2.line(img_atk, (x1, y1), (x2, y2), (0, 0, 255), 2)
 
-    # cv2.imshow('sample image', img_atk)
-    # cv2.waitKey(0)
-    # cv2.destroyAllWindows()
+    cv2.imshow('sample image', img_atk)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
 else:
     print('lines have not been detected...')
     attack_point = np.random.randint(255)
