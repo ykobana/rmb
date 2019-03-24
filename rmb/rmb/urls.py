@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
-
+from menu import apis
 urlpatterns = [
     path('', include('accounts.urls')),
     path('menu/', include('menu.urls')),
@@ -25,5 +25,6 @@ urlpatterns = [
     path('rank/', include('rank.urls')),
     path('chat/', include('chat.urls')),
     path('log/', include('log.urls')),
+    path('api/', include(apis.router.urls)),
     path('admin/', admin.site.urls),
 ]

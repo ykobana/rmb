@@ -210,7 +210,7 @@ $(function() {
         //  dataは、フォームの内容をserialize()している
         //  →serialize()の内容は、cs1=custom1&cs2=custom2
         $.ajax({
-            url:"http://127.0.0.1:8000/menu/get_chat_list", // 通信先のURL
+            url:"http://127.0.0.1:8000/api/chats", // 通信先のURL
             type:"GET",		// 使用するHTTPメソッド
             dataType:"json", // 応答のデータの種類
                             // (xml/html/script/json/jsonp/text)
@@ -224,11 +224,12 @@ $(function() {
                     console.log(jq_XHR.status); //例：200
                     console.log(text_status); //例：success
 
+                    recv_data_str = JSON.stringify(recv_data);
+
                     // JSONをJavaScriptオブジェクトにする
-                    var json_data = JSON.parse(recv_data);
-                    var db_chat_data = json_data;
-                    var db_latest_idx = json_data[0]["pk"]; // DB上の最新のインデックスを取得
-                    console.log("db_latest_idx:" + json_data[0]["pk"]);
+                    var json_data = JSON.parse(recv_data_str);
+                    var db_chat_data = json_data["results"];
+                    var db_latest_idx = db_chat_data[0]["pk"]; // DB上の最新のインデックスを取得
 
                     // 現在表示中の最新のインデックスを取得
                     var chat_data_elements = document.getElementsByClassName("chat-data");
@@ -272,12 +273,12 @@ $(function() {
                         //console.log("add_chat_data: ");
                         //console.log(add_chat_data);
                         console.log("add_chat_data.pk: " + add_chat_data[0]["pk"]);
-                        console.log("add_chat_data.fields.name: " + add_chat_data[0]["fields"]["name"]);
-                        console.log("add_chat_data.fields.message " + add_chat_data[0]["fields"]["message"]);
+                        console.log("add_chat_data.name: " + add_chat_data[0]["name"]);
+                        console.log("add_chat_data.message " + add_chat_data[0]["message"]);
                         $('#chat-section').prepend('<div class="chat-data chat-idx-' + add_chat_data[0]["pk"] + '">' +
-                                                        '<div class="chatuser">' + add_chat_data[0]["fields"]["name"] + '</div>' +
+                                                        '<div class="chatuser">' + add_chat_data[0]["name"] + '</div>' +
                                                         '<div class="chat-balloon-left">' +
-                                                            '<p>' + add_chat_data[0]["fields"]["message"] + '</p>' +
+                                                            '<p>' + add_chat_data[0]["message"] + '</p>' +
                                                         '</div>' +
                                                    '</div>');
                     }

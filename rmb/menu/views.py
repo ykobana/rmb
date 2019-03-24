@@ -36,3 +36,4 @@ def post_chat_message(request):
 
     ret = {"data": "param1"}
     return JsonResponse(ret)
+
