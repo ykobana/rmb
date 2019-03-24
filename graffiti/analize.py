@@ -7,16 +7,27 @@ import sys
 
 def main(args):
     # 元画像の読み込み
-    args = sys.argv
     img = cv2.imread(args[1])
+
+    # 体力の算出
+    hit_point = analyze_hit_point(img)
+    print('hit_point: ' + str(hit_point))
 
     # 攻撃力の算出(直線が多い)
     attack_point = analyze_attack_point(img)
     print('attack_point: ' + str(attack_point))
 
     # 防御力の算出（画素が中心に寄っている）
-    defence_point = analyze_defenece_point(img)
+    defence_point = analyze_defence_point(img)
     print('defence_point:', defence_point)
+
+    # 俊敏力の算出（上半分と下半分の画素の割合がが均一）
+    speed_point = analyze_speed_point(img)
+    print('speed_point:', speed_point)
+
+    # 運命力の算出（ランダム）
+    luck_point = analyze_luck()
+    print('luck_point:', luck_point)
 
 
 # 2点間の距離を算出する関数
@@ -26,6 +37,10 @@ def calc_dist(x1, y1, x2, y2):
     length = np.linalg.norm(a - b)
     return length
 
+
+# 体力を算出する関数
+def analyze_hit_point(img):
+    return 1000
 
 # 攻撃力を算出する関数
 def analyze_attack_point(img):
@@ -57,7 +72,7 @@ def analyze_attack_point(img):
 
 
 # 防御力を算出する関数（画像の画素が中心に寄っている）
-def analyze_defenece_point(img):
+def analyze_defence_point(img):
     defence_point = 0
     img_def = copy.deepcopy(img)
 
@@ -68,11 +83,11 @@ def analyze_defenece_point(img):
 
     # ドットをすべて走査
     length_array = []
-    for x in range(height):
-        for y in range(width):
+    for x in range(width):
+        for y in range(height):
             # ドットの場合は中心からの距離を求める
-            if not all(img_def[x, y] == 255):  # 画素が白の場合（RGBすべてが255でない）
-                l = calc_dist(x, y, center_coordinate_x, center_coordinate_y)
+            if not all(img_def[y, x] == 255):  # 画素が白でない場合（RGBすべてが255でない）
+                l = calc_dist(y, x, center_coordinate_y, center_coordinate_x)
                 length_array.append(l)
 
     if length_array is None:
@@ -94,6 +109,44 @@ def analyze_defenece_point(img):
 
     return defence_point
 
+
+# 俊敏力を算出する関数（画像の画素の上下の割合が均一）
+def analyze_speed_point(img):
+    speed_point = 0
+
+    # 全ドット数、上半分のドット数、下半分のドット数計算
+    upper_half_dots = 0
+    lower_half_dots = 0
+    height, width = img.shape[:2]
+    center_coordinate_y = int(height / 2)
+    length_array = []
+    for x in range(width):
+        for y in range(height):
+            # ドットの場合は中心からの距離を求める
+            if not all(img[y, x] == 255):  # 画素が白でない場合（RGBすべてが255でない）
+                if y < center_coordinate_y:  # y座標が中心よりも上にある場合
+                    upper_half_dots += 1
+                else:
+                    lower_half_dots += 1
+
+    # 上半分のドット数の割合、下半分のドット数の割合を計算
+    upper_half_ratio = upper_half_dots / (upper_half_dots + lower_half_dots)
+    lower_half_ratio = lower_half_dots / (upper_half_dots + lower_half_dots)
+
+    # 上半分のドット数の割合、下半分のドット数の割合に対して、低い方/高い方*255で俊敏力を計算する
+    if upper_half_ratio > lower_half_ratio:
+        speed_point = 255 * (lower_half_ratio / upper_half_ratio)
+    else:
+        speed_point = 255 * (upper_half_ratio / lower_half_ratio)
+
+    return int(speed_point)
+
+# 運命力を算出する関数（ランダム）
+def analyze_luck():
+    luck_point = np.random.randint(255)
+    return luck_point
+
+
 # main関数
 if __name__ == '__main__':
-    main(sys.argv[1:])
+    main(sys.argv)
