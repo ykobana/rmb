@@ -7,7 +7,6 @@ import sys
 
 def main(args):
     # 元画像の読み込み
-    args = sys.argv
     img = cv2.imread(args[1])
 
     # 攻撃力の算出(直線が多い)
@@ -15,8 +14,12 @@ def main(args):
     print('attack_point: ' + str(attack_point))
 
     # 防御力の算出（画素が中心に寄っている）
-    defence_point = analyze_defenece_point(img)
+    defence_point = analyze_defence_point(img)
     print('defence_point:', defence_point)
+
+    # 運命力の算出（ランダム）
+    luck_point = analyze_luck()
+    print('luck_point:', luck_point)
 
 
 # 2点間の距離を算出する関数
@@ -57,7 +60,7 @@ def analyze_attack_point(img):
 
 
 # 防御力を算出する関数（画像の画素が中心に寄っている）
-def analyze_defenece_point(img):
+def analyze_defence_point(img):
     defence_point = 0
     img_def = copy.deepcopy(img)
 
@@ -94,6 +97,13 @@ def analyze_defenece_point(img):
 
     return defence_point
 
+
+# 運命力を算出する関数
+def analyze_luck():
+    luck_point = np.random.randint(255)
+    return luck_point
+
+
 # main関数
 if __name__ == '__main__':
-    main(sys.argv[1:])
+    main(sys.argv)
