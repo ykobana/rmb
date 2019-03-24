@@ -9,6 +9,10 @@ def main(args):
     # 元画像の読み込み
     img = cv2.imread(args[1])
 
+    # 体力の算出
+    hit_point = analyze_hit_point(img)
+    print('hit_point: ' + str(hit_point))
+
     # 攻撃力の算出(直線が多い)
     attack_point = analyze_attack_point(img)
     print('attack_point: ' + str(attack_point))
@@ -33,6 +37,10 @@ def calc_dist(x1, y1, x2, y2):
     length = np.linalg.norm(a - b)
     return length
 
+
+# 体力を算出する関数
+def analyze_hit_point(img):
+    return 1000
 
 # 攻撃力を算出する関数
 def analyze_attack_point(img):
