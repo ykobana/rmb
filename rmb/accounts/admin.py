@@ -13,4 +13,3 @@ admin.site.register(Character)
 admin.site.register(UserAndCharacterLink)
 admin.site.register(BattleResult)
 admin.site.register(Skill)
-

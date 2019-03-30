@@ -11,11 +11,13 @@ class User(AbstractUser):
 
 
 class Character(models.Model):
+    name = models.CharField(max_length=100, default='heartless')
+    graffiti_image = models.ImageField('graffiti',upload_to='uploads/graffiti/')
     rate = models.IntegerField(default=1000)
     level = models.IntegerField(default=1)
     experience_point = models.IntegerField(default=0)
-    hit_point = models.IntegerField(default=100)
-    magic_point = models.IntegerField(default=150)
+    hit_point = models.IntegerField(default=1000)
+    magic_point = models.IntegerField(default=1000)
     power = models.IntegerField(default=150)
     defence = models.IntegerField(default=150)
     speed = models.IntegerField(default=150)
@@ -40,4 +42,3 @@ class BattleResult(models.Model):
 class Skill(models.Model):
     power = models.IntegerField(default=10)
     magic_point_consumption = models.IntegerField(default=0)
-
