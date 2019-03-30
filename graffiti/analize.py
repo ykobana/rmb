@@ -13,6 +13,10 @@ def main(args):
     hit_point = analyze_hit_point(img)
     print('hit_point: ' + str(hit_point))
 
+    # 魔法力の算出
+    magic_point = analyze_magic_point(img)
+    print('magic_point: ' + str(magic_point))
+
     # 攻撃力の算出(直線が多い)
     attack_point = analyze_attack_point(img)
     print('attack_point: ' + str(attack_point))
@@ -40,6 +44,10 @@ def calc_dist(x1, y1, x2, y2):
 
 # 体力を算出する関数
 def analyze_hit_point(img):
+    return 1000
+
+# 魔法力を算出する関数
+def analyze_magic_point(img):
     return 1000
 
 # 攻撃力を算出する関数
