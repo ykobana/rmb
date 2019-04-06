@@ -9,8 +9,9 @@ import numpy as np
 import cv2
 import copy
 import sys
+from django.contrib.auth.decorators import login_required
 
-
+@login_required
 @require_POST
 @csrf_exempt
 def upload_graffiti(request):
@@ -80,6 +81,11 @@ def upload_graffiti(request):
         domain,
         new_character.graffiti_image.url,
     )
+
+
+    # ログインユーザと作成したキャラの紐づけをする。
+    new_
+
 
     # URLを文字列として返す。
     return HttpResponse(download_url, content_type="text/plain")

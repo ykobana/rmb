@@ -5,6 +5,7 @@ from .forms import RegistrationForm, LoginForm
 from django.contrib.auth import authenticate, login as django_login
 from menu.models import Chat
 from django.contrib.auth.hashers import make_password
+from django.contrib.auth.decorators import login_required
 
 
 def login(request):
@@ -103,7 +104,7 @@ def register(request):
             })
 '''
 
-
+@login_required
 def logout(request):
     request.session.flush()
     return redirect('accounts:login')

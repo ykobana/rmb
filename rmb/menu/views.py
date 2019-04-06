@@ -16,6 +16,7 @@ def main(request):
     return render(request, 'menu/menu.html', {})
 
 
+@login_required
 def get_chat_list(request):
     logging.debug("get_chat_list() called.")
     # チャットの履歴を取得する
@@ -23,6 +24,7 @@ def get_chat_list(request):
     return JsonResponse(serializers.serialize('json', chat_list), safe=False)
 
 
+@login_required
 def post_chat_message(request):
     logging.debug("post_chat_message() called.")
 
