@@ -15,11 +15,13 @@ import copy
 def upload_graffiti(request):
     logging.debug("upload_graffiti() called.")
 
+    character_name = request.POST["name"]
+
     # アップロードされた画像を解析し、一旦保存する。
     # 保存してから、保存先の元画像を読み込んで解析し、取得した値でモデルを更新する
     upload_file = request.FILES['graffiti']
 
-    new_character = Character(graffiti_image=upload_file)
+    new_character = Character(name=character_name, graffiti_image=upload_file)
     new_character.save()
 
     # 画像解析
