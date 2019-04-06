@@ -1,14 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "admin/base.html" %}
+
+{% block content %}
+
     <form method="POST" action="upload_graffiti" enctype="multipart/form-data">
         name:<input type="text" name="name" size="100"><br>
         file:<input type="file" name="graffiti"/><br>
         <input type="submit" value="SUBMIT"/>
     </form>
-</body>
-</html>
+
+{% endblock %}

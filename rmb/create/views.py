@@ -3,7 +3,7 @@ from django.http import HttpResponse
 import logging
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
-from accounts.models import Character
+from accounts.models import Character, UserAndCharacterLink
 from django.contrib.sites.shortcuts import get_current_site
 import numpy as np
 import cv2
@@ -15,14 +15,6 @@ from django.contrib.auth.decorators import login_required
 @require_POST
 @csrf_exempt
 def upload_graffiti(request):
-    username = None
-
-    if request.user.is_authenticated:
-        username = request.user.username
-        logging.debug("[debug]username: " + username)
-    else:
-        logging.debug("[debug]username not found...")
-
     logging.debug("upload_graffiti() called.")
 
     character_name = request.POST["name"]
@@ -82,9 +74,11 @@ def upload_graffiti(request):
         new_character.graffiti_image.url,
     )
 
-
     # ログインユーザと作成したキャラの紐づけをする。
-
+    logging.debug("user_id: " + str(request.user.id))
+    logging.debug("new_character: " + str(new_character.id))
+    new_user_and_character_link = UserAndCharacterLink(user_key=request.user, character_key=new_character)
+    new_user_and_character_link.save()
 
     # URLを文字列として返す。
     return HttpResponse(download_url, content_type="text/plain")

@@ -29,8 +29,8 @@ class Character(models.Model):
 
 
 class UserAndCharacterLink(models.Model):
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
-    character_id = models.ForeignKey(Character, on_delete=models.CASCADE)
+    user_key = models.ForeignKey(User, on_delete=models.CASCADE)
+    character_key = models.ForeignKey(Character, on_delete=models.CASCADE)
 
 
 class BattleResult(models.Model):
