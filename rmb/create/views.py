@@ -8,11 +8,20 @@ from django.contrib.sites.shortcuts import get_current_site
 import numpy as np
 import cv2
 import copy
+import sys
 
 
 @require_POST
 @csrf_exempt
 def upload_graffiti(request):
+    username = None
+
+    if request.user.is_authenticated:
+        username = request.user.username
+        logging.debug("[debug]username: " + username)
+    else:
+        logging.debug("[debug]username not found...")
+
     logging.debug("upload_graffiti() called.")
 
     character_name = request.POST["name"]
@@ -176,7 +185,6 @@ class GraffitiAnalyzer:
         lower_half_dots = 0
         height, width = img.shape[:2]
         center_coordinate_y = int(height / 2)
-        length_array = []
         for x in range(width):
             for y in range(height):
                 # ドットの場合は中心からの距離を求める

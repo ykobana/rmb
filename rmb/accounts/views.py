@@ -1,24 +1,18 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
-from django.utils.decorators import method_decorator
-from django.views import generic
 from .models import User
 import logging
-from .forms import RegistrationForm
-from django.contrib.auth import get_user_model
+from .forms import RegistrationForm, LoginForm
+from django.contrib.auth import authenticate, login as django_login
 from menu.models import Chat
-from hashlib import sha256
 from django.contrib.auth.hashers import make_password
 
-User = get_user_model()
+
+def login(request):
+    logging.debug("login() called.")
+    return render(request, 'accounts/login.html', {})
 
 
-@method_decorator(login_required, name='dispatch')
-class IndexView(generic.ListView):
-    template_name = 'accounts/login.html'
-
-
-def authenticate(request):
+def auth(request):
     logging.debug("authenticate() called.")
     try:
         # リクエストのユーザ名、パスワードを取得する
@@ -35,16 +29,14 @@ def authenticate(request):
 
     # ユーザ名とパスワードの有効性を検証する
     # 該当するユーザ名があるかを探す
-    try:
-        user = User.objects.get(username=username)
-    except User.DoesNotExist:
-        logging.debug("error: Query not exit!!")
-        user = None
+    user = authenticate(request, username=username, password=password)
 
-    if (user is not None) and (user.check_password(password)):
+    if user is not None:
         logging.debug("if ok!!!! password is %s, user.password is %s", password, User.password)  # ここでログイン成功時の場所にリダイレクトする
         request.session['username'] = username  # セッションIDを作成する
         logging.debug("session: %s", request.session['username'])
+        user.username = username
+        django_login(request, user)
 
         # チャットの履歴を取得する
         chat_list = Chat.objects.order_by('-date')[:50]
@@ -58,6 +50,7 @@ def authenticate(request):
 
     else:  # ← methodが'POST'ではない = 最初のページ表示時の処理
         logging.debug("if ng!!!! password is %s, user.password is %s", password, User.password)  # ここでエラー文言を返す
+        login_form = LoginForm()
         return render(request, 'accounts/login.html', {
             'error': 'Your username and password did not match. Please try again.'
         })

@@ -5,18 +5,19 @@ from django.core import serializers
 from .models import Chat
 from datetime import datetime
 import logging
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import get_user_model
 
+user = get_user_model()
 
+@login_required
 def main(request):
-    session = request.session.get('username')
-    if session is None:
-        # セッション切れや、セッションが空でURL直接入力したら入力画面にリダイレクト。
-        return redirect('accounts:login')
-
+    logging.debug("main() called.")
     return render(request, 'menu/menu.html', {})
 
 
 def get_chat_list(request):
+    logging.debug("get_chat_list() called.")
     # チャットの履歴を取得する
     chat_list = Chat.objects.order_by('-date')[:50]
     return JsonResponse(serializers.serialize('json', chat_list), safe=False)

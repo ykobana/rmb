@@ -28,13 +28,17 @@
 <header class="site-info">
     <section class="logout-area">
         <form id="login" action="login.html">
-            <div id="logout" class="logout-button" onclick="$('#logout').submit();">Logout</div>
+            <div id="logout" class="logout-button" onclick="location.href='{% url 'accounts:logout' %}'">Logout</div>
         </form>
     </section>
 </header>
 <main class="main">
     <section class="menu contents">
-        <p>ようこそ、{{ username }}さん</p>
+        {% if user.is_authenticated %}
+        <p>{{ user.get_username }}でログイン中</p>
+        {% else %}
+        <p>ログインしていません</p>
+        {% endif %}
         <div class="heading">Menu</div>
         <div class="menu-info">
             <a id="create_" href="./create/graffiti" class="rmb-btn">Create</a>
