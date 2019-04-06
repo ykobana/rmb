@@ -84,7 +84,6 @@ def upload_graffiti(request):
 
 
     # ログインユーザと作成したキャラの紐づけをする。
-    new_
 
 
     # URLを文字列として返す。
