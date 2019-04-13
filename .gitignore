@@ -4,4 +4,4 @@ __pycache__/
 db.sqlite3
 *.pyc
 static/
-rmb/uploads/graffiti/*
+rmb/media/uploads/graffiti/*

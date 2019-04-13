@@ -1,5 +1,5 @@
 # Create your views here.
-from django.http import HttpResponse
+from django.shortcuts import render
 import logging
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
@@ -27,8 +27,8 @@ def upload_graffiti(request):
     new_character.save()
 
     # 画像解析
-    # 元画像の読み込み
-    img = cv2.imread(new_character.graffiti_image.url)
+    # 元画像の読み込み（先頭の"/"は除く）
+    img = cv2.imread(new_character.graffiti_image.url[1:])
     graffiti_analyzer = GraffitiAnalyzer()
 
     # 体力の算出
@@ -81,7 +81,7 @@ def upload_graffiti(request):
     new_user_and_character_link.save()
 
     # URLを文字列として返す。
-    return HttpResponse(download_url, content_type="text/plain")
+    return render(request, 'create/success.html', {})
 
 
 class GraffitiAnalyzer:

@@ -137,7 +137,8 @@ LOGIN_REDIRECT_URL = '/accounts/'
 TEMPLATE_DIRS = (
     os.path.join('accounts', 'templates/accounts'),
     os.path.join('chat', 'templates/chat'),
-    os.path.join('menu', 'templates/menu')
+    os.path.join('menu', 'templates/menu'),
+    os.path.join('show', 'templates/show')
 )
 
 # For debugging
@@ -165,3 +166,6 @@ REST_FRAMEWORK = {
 
 LOGIN_URL = 'accounts:login'
 LOGIN_REDIRECT_URL = 'accounts:login'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'

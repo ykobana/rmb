@@ -3,7 +3,6 @@ from .models import User
 import logging
 from .forms import RegistrationForm, LoginForm
 from django.contrib.auth import authenticate, login as django_login
-from menu.models import Chat
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.decorators import login_required
 
