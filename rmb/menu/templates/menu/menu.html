@@ -198,7 +198,7 @@ $(function() {
                 "username": username,
                 "message" : message
             };
-            $.post( 'http://127.0.0.1:8000/menu/post_chat_message',
+            $.post( 'http://127.0.0.1:8000/menu/chat_message',
                     json_data )
                 .done(function( data ) {
                     console.log( data.form );
@@ -214,7 +214,7 @@ $(function() {
         //  dataは、フォームの内容をserialize()している
         //  →serialize()の内容は、cs1=custom1&cs2=custom2
         $.ajax({
-            url:"http://127.0.0.1:8000/api/chats", // 通信先のURL
+            url:"http://127.0.0.1:8000/menu/chat_message", // 通信先のURL
             type:"GET",		// 使用するHTTPメソッド
             dataType:"json", // 応答のデータの種類
                             // (xml/html/script/json/jsonp/text)

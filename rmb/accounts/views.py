@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, reverse
 from .models import User
 import logging
 from .forms import RegistrationForm, LoginForm
@@ -47,7 +47,7 @@ def auth(request):
             "chat_list": chat_list
         }
 
-        return render(request, 'menu/menu.html', context)
+        return redirect(reverse('menu:main'), context)
 
     else:  # ← methodが'POST'ではない = 最初のページ表示時の処理
         logging.debug("if ng!!!! password is %s, user.password is %s", password, User.password)  # ここでエラー文言を返す
