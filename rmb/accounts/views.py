@@ -36,18 +36,9 @@ def auth(request):
         logging.debug("if ok!!!! password is %s, user.password is %s", password, User.password)  # ここでログイン成功時の場所にリダイレクトする
         request.session['username'] = username  # セッションIDを作成する
         logging.debug("session: %s", request.session['username'])
-        user.username = username
         django_login(request, user)
 
-        # チャットの履歴を取得する
-        chat_list = Chat.objects.order_by('-date')[:50]
-
-        context = {
-            'username': username,
-            "chat_list": chat_list
-        }
-
-        return redirect(reverse('menu:main'), context)
+        return redirect(reverse('menu:main'))
 
     else:  # ← methodが'POST'ではない = 最初のページ表示時の処理
         logging.debug("if ng!!!! password is %s, user.password is %s", password, User.password)  # ここでエラー文言を返す

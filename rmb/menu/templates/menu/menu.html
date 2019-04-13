@@ -41,7 +41,7 @@
         {% endif %}
         <div class="heading">Menu</div>
         <div class="menu-info">
-            <a id="create_" href="./create/graffiti" class="rmb-btn">Create</a>
+            <a id="create_" href="{% url 'create:graffiti' %}" class="rmb-btn">Create</a>
             <a id="battle_" href="#" class="rmb-btn rmb-cancel">Battle</a>
             <a id="show_" href="#" class="rmb-btn rmb-cancel">Show</a>
             <a id="rank_" href="#" class="rmb-btn modal-rank-trigger">Rank</a>
@@ -189,19 +189,15 @@ $(function() {
     $("#send_button").click(
         function(){
             console.log("send button clicked!");
-
-            var username = document.getElementById("username").value;
             var message = document.getElementById("send_message").value;
-            console.log("username: " + username);
             console.log("message: " + message);
             var json_data = {
-                "username": username,
                 "message" : message
             };
             $.post( 'http://127.0.0.1:8000/menu/chat_message',
                     json_data )
                 .done(function( data ) {
-                    console.log( data.form );
+                    console.log("send done.");
                     updateDisplayedChat();
                 })
                 .always(function() {
@@ -228,12 +224,10 @@ $(function() {
                     console.log(jq_XHR.status); //例：200
                     console.log(text_status); //例：success
 
-                    recv_data_str = JSON.stringify(recv_data);
-
                     // JSONをJavaScriptオブジェクトにする
-                    var json_data = JSON.parse(recv_data_str);
-                    var db_chat_data = json_data["results"];
-                    var db_latest_idx = db_chat_data[0]["pk"]; // DB上の最新のインデックスを取得
+                    var db_chat_data = JSON.parse(recv_data);
+                    console.log(db_chat_data);
+                    var db_latest_idx = db_chat_data[0].pk; // DB上の最新のインデックスを取得
 
                     // 現在表示中の最新のインデックスを取得
                     var chat_data_elements = document.getElementsByClassName("chat-data");
@@ -247,9 +241,9 @@ $(function() {
                     var min_chat_idx = db_latest_idx - MAX_CHAT_NUM;
                     console.log("min_chat_idx: " + min_chat_idx);
                     for(var i=0; i<chat_data_elements.length; i++) {
-                        //console.log("i: " + i);
+                        console.log("i: " + i);
                         var displayed_chat_idx = chat_data_elements[i].className.split(" ")[1].match(/\d+/);
-                        //console.log("displayed_chat_idx: " + displayed_chat_idx);
+                        console.log("displayed_chat_idx: " + displayed_chat_idx);
                         if(displayed_chat_idx <= min_chat_idx) {
                             //console.log("delete idx: " + i);
                             chat_data_elements[i].parentNode.removeChild(chat_data_elements[i]);
@@ -276,13 +270,13 @@ $(function() {
                                           );
                         //console.log("add_chat_data: ");
                         //console.log(add_chat_data);
-                        console.log("add_chat_data.pk: " + add_chat_data[0]["pk"]);
-                        console.log("add_chat_data.name: " + add_chat_data[0]["name"]);
-                        console.log("add_chat_data.message " + add_chat_data[0]["message"]);
-                        $('#chat-section').prepend('<div class="chat-data chat-idx-' + add_chat_data[0]["pk"] + '">' +
-                                                        '<div class="chatuser">' + add_chat_data[0]["name"] + '</div>' +
+                        console.log("add_chat_data.pk: " + add_chat_data[0].pk);
+                        console.log("add_chat_data.name: " + add_chat_data[0].fields.name);
+                        console.log("add_chat_data.message " + add_chat_data[0].fields.message);
+                        $('#chat-section').prepend('<div class="chat-data chat-idx-' + add_chat_data[0].pk + '">' +
+                                                        '<div class="chatuser">' + add_chat_data[0].fields.name + '</div>' +
                                                         '<div class="chat-balloon-left">' +
-                                                            '<p>' + add_chat_data[0]["message"] + '</p>' +
+                                                            '<p>' + add_chat_data[0].fields.message + '</p>' +
                                                         '</div>' +
                                                    '</div>');
                     }
