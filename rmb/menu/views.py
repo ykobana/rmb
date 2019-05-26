@@ -7,7 +7,6 @@ from datetime import datetime
 import logging
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
-import json
 
 user = get_user_model()
 
