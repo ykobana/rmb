@@ -1,0 +1,16 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+
+{% if result  %}
+  <div class="alert alert-danger" role="alert">
+    <p>{{ result }}</p>
+  </div>
+{% endif %}
+
+<p><a href="{% url 'menu:main' %}">back to menu</a></p>
+
+<div class="panel panel-primary">
+    <p>表示されたね（にっこり</p>
+</div>
+{% endblock %}
