@@ -1,0 +1,182 @@
+.logout-area {
+  margin: 0 auto;
+  width: 600px;
+  margin-top: 30px;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.logout-button {
+  background: orange;
+  border-radius: 10px;
+  width: 70px;
+  line-height: 44px;
+}
+
+.logout-button:hover {
+  color: white;
+}
+
+.contents {
+  margin: 0 auto;
+  width: 400px;
+  margin-bottom: 30px;
+}
+
+.modal-contents {
+  margin: 0 auto;
+  width: 450px;
+  margin-bottom: 30px;
+}
+
+.menu-info {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.menu-info>a {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 45%;
+  height: 50px;
+  border-radius: 30px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.heading {
+  font-size: 20px;
+  color: orange;
+  margin-bottom: 25px;
+}
+
+.chat-area {
+  margin-top: 30px;
+  margin-bottom: 10px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  height: 80%;
+}
+
+.chat-send {
+  text-align: center;
+  margin-top: 30px;
+}
+
+.chat-message-area {
+  width: 350px;
+  height: 25px;
+  border-radius: 10px;
+}
+
+.chat-message-button {
+  background: orange;
+  width: 40px;
+  height: 25px;
+  border-radius: 10px;
+  border-linet: 0px;
+}
+
+.chat-balloon-left {
+  border-radius: 30px;
+  position: relative;
+  display: inline-block;
+  margin: 1em 0 1.5em 15px;
+  padding: 7px 10px;
+  min-width: 120px;
+  max-width: 100%;
+  height: 40px;
+  color: #555;
+  font-size: 16px;
+  background: #e0edff;
+}
+
+.chat-balloon-left:before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: -30px;
+  margin-top: -15px;
+  border: 15px solid transparent;
+  border-right: 25px solid #e0edff;
+}
+
+.chat-balloon-left p {
+  margin: 0;
+  padding: 0;
+}
+
+.chat-balloon-right {
+  border-radius: 30px;
+  position: relative;
+  display: inline-block;
+  margin: 1.5em 15px 1.5em 200px;
+  padding: 7px 10px;
+  min-width: 120px;
+  max-width: 100%;
+  height: 40px;
+  color: #555;
+  font-size: 16px;
+  background: #FFFF6F;
+}
+
+.chat-balloon-right:before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 200px;
+  margin-top: -10px;
+  border: 10px solid transparent;
+  border-left: 25px solid #FFFF6F;
+}
+
+.chat-balloon-right p {
+  margin: 0;
+  padding: 0;
+}
+
+.rank-title {
+  color: orange;
+  /* width: 30px;
+  height: 30px;
+  color: white;
+  text-align: center;
+  margin-top: 5px;
+  border-radius: 50%; */
+}
+
+.rank-area {
+  margin-left: 40px;
+}
+
+.rank-data {
+  color: white;
+  margin-top: 10px;
+  /* width: 30px;
+  height: 30px;
+  color: white;
+  text-align: center;
+  margin-top: 5px;
+  border-radius: 50%; */
+}
+
+.rank-data span, .rank-title span{
+  display: inline-block;
+}
+.rank-data .rank-no, .rank-title .rank-no{
+  width: 40px;
+}
+
+.rank-data .rank-rate, .rank-title .rank-rate{
+  width: 50px;
+}
+.rank-data .rank-monster-name, .rank-title .rank-monster-name{
+  width: 120px;
+}
+.rank-data .rank-user-name, .rank-title .rank-user-name{
+  width: 120px;
+}

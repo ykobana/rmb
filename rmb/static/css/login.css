@@ -1,0 +1,25 @@
+.login-area {
+  /* position: absolute; */
+  margin : 0 auto;
+  margin-top: 150px;
+  width: 400px;
+  height: 320px;
+  padding: 25px;
+  /* センターリングにシャドーする場合のcss */
+  /* -webkit-box-shadow: 0 0 100px rgba(0,0,0,0.15);
+  box-shadow: 0 0 100px rgba(0,0,0,0.15); */
+}
+.login-title {
+
+}
+
+.login-logo{
+  text-align: center;
+  font-size: 35px;
+  color : red;
+  /* display: block; */
+  /* margin: 0 auto; */
+  /* margin-bottom: 50px; */
+  /* max-width: 200px;
+  max-height: 100px; */
+}
