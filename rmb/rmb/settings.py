@@ -85,8 +85,10 @@ WSGI_APPLICATION = 'rmb.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'rmb',
+        'USER' : 'rmb_admin',
+        'PASSWORD' : ''
     }
 }
 

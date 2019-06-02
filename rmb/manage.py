@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 import os
 import sys
+import pymysql # 追加
+pymysql.install_as_MySQLdb() # 追加
 
 if __name__ == '__main__':
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'rmb.settings')
