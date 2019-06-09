@@ -35,7 +35,7 @@ INSTALLED_APPS = [
     'accounts.apps.AppConfig',
     'menu.apps.AppConfig',
     'chat.apps.ChatConfig',
-    'create.apps.CreateConfig',
+    'character.apps.CharacterConfig',
     'battle.apps.BattleConfig',
     'log.apps.LogConfig',
     'rank.apps.RankConfig',
@@ -140,7 +140,8 @@ TEMPLATE_DIRS = (
     os.path.join('accounts', 'templates/accounts'),
     os.path.join('chat', 'templates/chat'),
     os.path.join('menu', 'templates/menu'),
-    os.path.join('show', 'templates/show')
+    os.path.join('show', 'templates/show'),
+    os.path.join('character', 'templates/character'),
 )
 
 # For debugging

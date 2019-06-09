@@ -10,12 +10,55 @@ import copy
 import sys
 from django.contrib.auth.decorators import login_required
 import uuid
+from django.http import HttpResponse
+
+
+@login_required
+def delete(request, character_id):
+    logging.debug("delete() called.")
+    response_file_path = 'character/delete_result.html'
+
+    result_msg=""
+
+    # 指定されたキャラクタを削除する
+    try:
+        user_and_character_links = UserAndCharacterLink.objects.filter(user_key=request.user)
+        # ログインユーザがキャラを持っていない
+        if user_and_character_links.count() == 0:
+            result_msg = "could not delete character because you don't have any character..."
+            response = {
+                "result_msg": result_msg
+            }
+            return render(request, response_file_path, response)
+
+        # ログインユーザに紐付いている取得したキャラ一覧に該当するIDのキャラを検索し、削除する
+        for user_and_character_link in user_and_character_links:
+            character_obj = Character.objects.get(pk=user_and_character_link.character_key.pk)
+            logging.debug("character_obj.pk: " + str(character_obj.pk))
+            logging.debug("character_id: " + str(character_id))
+
+            if int(character_obj.pk) == int(character_id):
+                character_obj.delete()
+                logging.debug("character deleted!")
+                result_msg = "succeeded to delete character!"
+
+    except Character.DoesNotExist:
+        logging.debug("character not found...")
+        result_msg = "could not delete character because your request is incorrect.."
+
+    logging.debug("result_msg: " + result_msg)
+
+    response = {
+        "result": result_msg
+    }
+
+    return render(request, response_file_path, response)
 
 
 @login_required
 @require_POST
-def upload_graffiti(request):
-    logging.debug("upload_graffiti() called.")
+def create(request):
+    logging.debug("create() called.")
 
     character_name = request.POST["name"]
     character_file_name = str(uuid.uuid4()).replace('-', '')
@@ -83,7 +126,7 @@ def upload_graffiti(request):
     new_user_and_character_link.save()
 
     # URLを文字列として返す。
-    return render(request, 'create/success.html', {})
+    return render(request, 'character/success.html', {})
 
 
 class GraffitiAnalyzer:
