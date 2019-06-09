@@ -10,7 +10,6 @@ import copy
 import sys
 from django.contrib.auth.decorators import login_required
 import uuid
-from django.http import HttpResponse
 
 
 @login_required

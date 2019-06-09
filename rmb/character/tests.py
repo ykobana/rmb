@@ -1,11 +1,12 @@
-from django.test import TestCase
+from django.test import Client, RequestFactory, TestCase
 from django.urls import reverse
 
 # Create your tests here.
-class QuestionIndexViewTests(TestCase):
-    def test_no_questions(self):
+class CharacterViewTests(TestCase):
+    def test_graffiti_page_exist(self):
         """
-        If no questions exist, an appropriate message is displayed.
+        ページが存在するか
         """
         response = self.client.get(reverse('character:graffiti'))
         self.assertEqual(response.status_code, 200)
+

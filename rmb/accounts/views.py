@@ -5,6 +5,7 @@ from .forms import RegistrationForm, LoginForm
 from django.contrib.auth import authenticate, login as django_login
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
 
 
 def login(request):
@@ -12,6 +13,7 @@ def login(request):
     return render(request, 'accounts/login.html', {})
 
 
+@require_POST
 def auth(request):
     logging.debug("authenticate() called.")
     try:
@@ -36,30 +38,28 @@ def auth(request):
         request.session['username'] = username  # セッションIDを作成する
         logging.debug("session: %s", request.session['username'])
         django_login(request, user)
-
         return redirect(reverse('menu:main'))
 
-    else:  # ← methodが'POST'ではない = 最初のページ表示時の処理
+    else:
         logging.debug("if ng!!!! password is %s, user.password is %s", password, User.password)  # ここでエラー文言を返す
-        login_form = LoginForm()
         return render(request, 'accounts/login.html', {
             'error': 'Your username and password did not match. Please try again.'
         })
 
 
+@require_POST
 def register(request):
     logging.debug("register() called.")
 
-    if request.method == 'POST':
-        registration_form = RegistrationForm(request.POST)
-        if registration_form.is_valid():
-            user_info = registration_form.save(commit=False)
-            user_info.password = make_password(registration_form.cleaned_data['password'])
-            user_info.save()
-            logging.debug("database register success!!!!")
-            return render(request, 'accounts/registration.html', {
-                'result': 'registration succeeded!'
-            })
+    registration_form = RegistrationForm(request.POST)
+    if registration_form.is_valid():
+        user_info = registration_form.save(commit=False)
+        user_info.password = make_password(registration_form.cleaned_data['password'])
+        user_info.save()
+        logging.debug("database register success!!!!")
+        return render(request, 'accounts/registration.html', {
+            'result': 'registration succeeded!'
+        })
 
     logging.debug("database error occurred!!!!")
     logging.debug("error: %s", registration_form.errors)
@@ -71,28 +71,6 @@ def register(request):
         'result': registration_form.errors
     })
 
-
-'''
-        # リクエストのユーザ名、パスワード、Eメールアドレスを取得する
-        username = request.POST['username']
-        password = request.POST['password']
-        email = request.POST['email']
-
-        # 取得した情報で登録する
-        new_user = User.objects.create_user(username=username, password=password, email=email)
-
-        try:
-            new_user.save()
-            logging.debug("database register success!!!!")
-            return render(request, 'accounts/registration.html', {
-                'result': 'registration succeeded!'
-            })
-        except DatabaseError:
-            logging.debug("database error occurred!!!!")
-            return render(request, 'accounts/registration.html', {
-                'result': 'database error occurred'
-            })
-'''
 
 @login_required
 def logout(request):
