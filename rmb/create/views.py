@@ -2,7 +2,6 @@
 from django.shortcuts import render
 import logging
 from django.views.decorators.http import require_POST
-from django.views.decorators.csrf import csrf_exempt
 from accounts.models import Character, UserAndCharacterLink
 from django.contrib.sites.shortcuts import get_current_site
 import numpy as np
@@ -10,18 +9,21 @@ import cv2
 import copy
 import sys
 from django.contrib.auth.decorators import login_required
+import uuid
+
 
 @login_required
 @require_POST
-@csrf_exempt
 def upload_graffiti(request):
     logging.debug("upload_graffiti() called.")
 
     character_name = request.POST["name"]
+    character_file_name = str(uuid.uuid4()).replace('-', '')
 
     # アップロードされた画像を解析し、一旦保存する。
     # 保存してから、保存先の元画像を読み込んで解析し、取得した値でモデルを更新する
     upload_file = request.FILES['graffiti']
+    upload_file.name = character_file_name + ".jpg"
 
     new_character = Character(name=character_name, graffiti_image=upload_file)
     new_character.save()

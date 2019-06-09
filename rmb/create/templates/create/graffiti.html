@@ -4,6 +4,7 @@
 
     <p><a href="{% url 'menu:main' %}">back to menu</a></p>
     <form method="POST" action="upload_graffiti" enctype="multipart/form-data">
+        {% csrf_token %}
         name:<input type="text" name="name" size="100"><br>
         file:<input type="file" name="graffiti"/><br>
         <input type="submit" value="SUBMIT"/>
