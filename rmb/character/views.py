@@ -125,8 +125,13 @@ def create(request):
     new_user_and_character_link = UserAndCharacterLink(user_key=request.user, character_key=new_character)
     new_user_and_character_link.save()
 
+    response = {
+        "result": "success!!!",
+        "character": new_character
+    }
+
     # URLを文字列として返す。
-    return render(request, 'character/success.html', {})
+    return render(request, 'character/success.html', response)
 
 
 class GraffitiAnalyzer:

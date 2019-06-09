@@ -13,7 +13,33 @@
     <h3 class="panel-title text-center">User profile!</h3>
   </div>
   <div class="panel-body">
-      <p>Upload succeeded!!</p>
+    <table border="5" rules="all">
+          <tr>
+              <td>LV</td><td>"{{ character.level }}"</td>
+          </tr>
+          <tr>
+              <td>HP</td><td>"{{ character.hit_point }}"</td>
+          </tr>
+          <tr>
+              <td>MP</td><td>"{{ character.magic_point }}"</td>
+          </tr>
+          <tr>
+              <td>ATK</td><td>"{{ character.attack_point }}"</td>
+          </tr>
+          <tr>
+              <td>DEF</td><td>"{{ character.defence_point }}"</td>
+          </tr>
+          <tr>
+              <td>SPD</td><td>"{{ character.speed_point }}"</td>
+          </tr>
+          <tr>
+              <td>LCK</td><td>"{{ character.luck_point }}"</td>
+          </tr>
+      </table>
+
+      <div>
+          <img src="{{ character.image.url }}" width="100" height="100"/>
+      </div>
       <p><a href="{% url 'menu:main' %}">back to menu</a></p>
   </div>
 </div>
